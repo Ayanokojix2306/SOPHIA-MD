@@ -1,12 +1,12 @@
 {
-  "name": "baileys-integration-youtube",
-  "version": "1.0.0",
+  "name": "SOPHIA-MD",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "mohammed khan",
+  "author": "Ayanokoji",
   "license": "ISC",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.9",
