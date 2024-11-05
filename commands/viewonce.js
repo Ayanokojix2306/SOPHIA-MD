@@ -1,4 +1,4 @@
-const { downloadMediaMessage } = require('@whiskysockets/baileys'); // Import downloadMediaMessage from Whiskysockets
+ // Import downloadMediaMessage from Whiskysockets
 const Command = require('../lib/Command'); 
 
 // Unlock View Once Command
