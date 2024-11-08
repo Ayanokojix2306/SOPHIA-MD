@@ -2,18 +2,9 @@ const Command = require('../lib/Command'); // Import Command structure
 const config = require('../config');
 const os = require('os');
 const fs = require('fs');
-const handlePingCommand = async (sock, message) => {
-    const startTime = Date.now(); // Record start time
-    const reply = 'Pong! 🏓'; // Response message
-    await sock.sendMessage(message.key.remoteJid, { text: reply }); // Send response
-    const endTime = Date.now(); // Record end time
-    const latency = endTime - startTime; // Calculate latency
-    await sock.sendMessage(message.key.remoteJid, { text: `Latency: ${latency} ms` }); // Send latency message
-};
- // Import Command structure
 
-const handleStatusCommand = async (sock, message) => {
-    const detectPlatform = () => {
+// Function to detect platform (Render, Heroku, VPS, or Unknown)
+const detectPlatform = () => {
     const hostname = os.hostname();
 
     if (hostname.includes('heroku')) {
@@ -31,14 +22,21 @@ const handleStatusCommand = async (sock, message) => {
     }
 };
 
+// Ping command handler
+const handlePingCommand = async (sock, message) => {
+    const startTime = Date.now();
+    await sock.sendMessage(message.key.remoteJid, { text: 'Pong! 🏓' });
+    const latency = Date.now() - startTime;
+    await sock.sendMessage(message.key.remoteJid, { text: `Latency: ${latency} ms` });
+};
+
+// Status command handler
 const handleStatusCommand = async (sock, message) => {
-    const uptime = (Date.now() - global.startTime) / 1000; // Use global.startTime to calculate uptime
-    const uptimeFormatted = new Date(uptime * 1000).toISOString().substr(11, 8); // Format uptime as HH:MM:SS
-    const botMode = config.MODE || "Unknown"; // Mode: public or private (based on your config)
+    const uptime = (Date.now() - global.startTime) / 1000;
+    const uptimeFormatted = new Date(uptime * 1000).toISOString().substr(11, 8);
+    const botMode = config.MODE || "Unknown";
+    const platform = detectPlatform();
 
-    const platform = detectPlatform(); // Detect the platform
-
-    // Create a more visually appealing message
     const replyMessage = `
 ✨ **Bot Status** ✨
 
@@ -51,14 +49,11 @@ const handleStatusCommand = async (sock, message) => {
 🌐 **Platform**: ${platform}
 `;
 
-    // Send the status reply
     await sock.sendMessage(message.key.remoteJid, { text: replyMessage });
 };
 
-
-// Create a new command instance for status
+// Create command instances
 const statusCommand = new Command('status', 'Displays the current status of the bot', handleStatusCommand);
-
 const pingCommand = new Command('ping', 'Responds with Pong and latency', handlePingCommand);
 
-module.exports = { statusCommand,pingCommand };
+module.exports = { statusCommand, pingCommand };
