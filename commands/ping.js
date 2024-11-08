@@ -2,7 +2,6 @@ const Command = require('../lib/Command'); // Import Command structure
 const config = require('../config');
 const os = require('os');
 const fs = require('fs');
-
 const handlePingCommand = async (sock, message) => {
     const startTime = Date.now(); // Record start time
     const reply = 'Pong! 🏓'; // Response message
