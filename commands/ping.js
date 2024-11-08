@@ -43,7 +43,7 @@ const handleStatusCommand = async (sock, message) => {
     const replyMessage = `
 ✨ **Bot Status** ✨
 
-🟢 **Online**: The bot is currently up and running!
+🟢 **Online**: SOPHIA MD is currently up and running!
 
 ⏱️ **Uptime**: ${uptimeFormatted} (HH:MM:SS)
 
