@@ -1,5 +1,5 @@
 const Command = require('../lib/Command'); // Import Command structure
-const config = require('..config');
+const config = require('../config');
 
 const handlePingCommand = async (sock, message) => {
     const startTime = Date.now(); // Record start time
