@@ -1,3 +1,4 @@
+global.startTime = Date.now();
 const express = require('express');
 const makeWASocket = require('@whiskeysockets/baileys').default;
 const { MongoClient } = require('mongodb');
