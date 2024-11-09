@@ -1,5 +1,6 @@
 const Command = require('../lib/Command'); // Import Command structure
 const config = require('../config');
+const axios = require('axios');
 const os = require('os');
 const fs = require('fs');
 
@@ -52,8 +53,33 @@ const handleStatusCommand = async (sock, message) => {
     await sock.sendMessage(message.key.remoteJid, { text: replyMessage });
 };
 
+
+
+async function handleDefineCommand(sock, message) {
+    const text = message.message.conversation || message.message.extendedTextMessage.text || '';
+    const word = text.split(' ')[1]; // Get the word after the command
+
+    if (!word) {
+        await sock.sendMessage(message.key.remoteJid, { text: "Please provide a word to define. 🧠" });
+        return;
+    }
+
+    try {
+        const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        const definition = response.data[0].meanings[0].definitions[0].definition;
+        const partOfSpeech = response.data[0].meanings[0].partOfSpeech;
+        const example = response.data[0].meanings[0].definitions[0].example || "No example provided.";
+
+        const reply = `*Word:* ${word}\n*Definition:* ${definition}\n*Part of Speech:* ${partOfSpeech}\n*Example:* ${example}`;
+        await sock.sendMessage(message.key.remoteJid, { text: reply });
+    } catch (error) {
+        console.error(error);
+        await sock.sendMessage(message.key.remoteJid, { text: "Couldn't find the definition for that word. ❌" });
+    }
+}
+
 // Create command instances
 const statusCommand = new Command('status', 'Displays the current status of the bot', handleStatusCommand);
 const pingCommand = new Command('ping', 'Responds with Pong and latency', handlePingCommand);
-
-module.exports = { statusCommand, pingCommand };
+const defineCommand = new Command('define', 'inbuilt dictionary for helping',handleDefineCommand, 'public')
+module.exports = { statusCommand, pingCommand, defineCommand };
